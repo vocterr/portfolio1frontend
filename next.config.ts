@@ -13,16 +13,18 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      {
-        source: "/api/:path*",
-        headers: [
-          { key: "Access-Control-Allow-Origin", value: "https://frontend.vercel.app" },
-          { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Headers", value: "Content-Type, Cookie" },
-        ],
-      },
+        {
+            source: "/(.*)",
+            headers: [
+                { key: "Access-Control-Allow-Credentials", value: "true" },
+                { key: "Access-Control-Allow-Origin", value: "https://portfolio1frontend.vercel.app" },
+                { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,POST,PUT,DELETE" },
+                { key: "Access-Control-Allow-Headers", value: "Content-Type,Authorization" },
+            ],
+        },
     ];
-  },
+},
+
   
 };
 
