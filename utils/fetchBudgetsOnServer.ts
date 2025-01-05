@@ -1,4 +1,5 @@
 export const fetchBudgetsOnServer = async (token: string | undefined) => {
+    console.log(token);
     if (!token) {
         console.error("Token is missing. Cannot fetch budgets.");
         return [];
