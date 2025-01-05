@@ -7,7 +7,7 @@ import { FiLinkedin, FiTwitch, FiTwitter, FiYoutube } from 'react-icons/fi'
 export const Footer = () => {
     const pathname = usePathname();
 
-    if (pathname === "/signin" || pathname === "/signup" || pathname == "/create-goal" || pathname == "/create-account" || pathname == "/create-transaction" || pathname == "/create-budget" || pathname == "/user" || pathname == "/ai-insights") {
+    if (pathname === "/signin" || pathname === "/signup" || pathname == "/create-goal" || pathname == "/create-account" || pathname == "/create-transaction" || pathname == "/create-budget" || pathname == "/user" || pathname == "/ai-insights" || pathname.includes("/edit")) {
         return null;
     }
   return (
