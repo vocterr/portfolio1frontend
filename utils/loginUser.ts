@@ -9,8 +9,12 @@ export const loginUser = async (name: string, email: string, password: string) =
             credentials: "include",
             body: JSON.stringify({name, email, password})
         });
+        const data = await res.json();
         if (res.ok) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("loggedIn", data.loggedIn);
             return { success: true, message: "Logged In Successfully!" };
+            
         }
         else {
             return { success: false, message: "Signing In Failed. Please Try Again" };
