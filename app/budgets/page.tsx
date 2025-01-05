@@ -8,7 +8,6 @@ import Link from "next/link";
 
 export default async function BudgetsPage() {
     const cookieStore = await cookies();
-    console.log("Cookies", cookieStore.getAll());
     const token = cookieStore.get("token")?.value;
     const budgets: Budget[] = await fetchBudgetsOnServer(token);
     return (
