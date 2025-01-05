@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
         source: "/(.*)", // Applies these headers globally to all routes
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "https://portfolio1frontend.vercel.app" }, // Frontend origin
+          { key: "Access-Control-Allow-Origin", value: "https://portfolio1frontend-vocterrs-projects.vercel.app/" }, // Frontend origin
           { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,POST,PUT,DELETE" },
           { key: "Access-Control-Allow-Headers", value: "Content-Type,Authorization" },
         ],
