@@ -9,6 +9,7 @@ import Link from "next/link";
 export default async function BudgetsPage() {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
+    console.log("Cookies: ", cookieStore.getAll());
     const budgets: Budget[] = await fetchBudgetsOnServer(token);
     return (
         <div className="flex flex-col mt-[104px] h-full w-full">
