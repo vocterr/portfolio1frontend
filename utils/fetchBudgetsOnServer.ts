@@ -9,8 +9,8 @@ export const fetchBudgetsOnServer = async (token: string | undefined) => {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Cookie: `token=${token}`, // Pass the token via the Cookie header
             },
+            credentials: "include", // Automatically include cookies
         });
 
         if (!res.ok) {
