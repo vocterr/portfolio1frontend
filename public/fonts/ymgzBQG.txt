@@ -1,0 +1,249 @@
+#include <iostream>
+#include <cstdlib>
+#include <windows.h>
+#include <string>
+
+using namespace std;
+struct Player{
+    int hp;
+    int str;
+    int dex;
+    int intl;
+    int exp;
+    int maxHp;
+    int maxExp;
+    string playerClass;
+    string currentLocation = "Sant'Elia";
+};
+
+Player player;
+
+struct Enemy{
+    int hp;
+    int maxHp;
+    int attack;
+    int expGive;
+    int goldGive;
+    string name;
+    string location;
+};
+
+Enemy enemy;
+Enemy enemies[10] = {
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+    {50,50,10,10,20,"Alibaba","Sant'Elia"},
+};
+
+string PL( const char * text );
+void setTextColor(int color);
+void firstTimeTalk ();
+void chooseClass ();
+void menu();
+void startGame();
+void loadGame();
+void mainLoop();
+
+int main() {
+
+    menu();
+
+
+
+return 0;
+}
+
+void menu (){
+    cout << "======================\n";
+    cout << PL("      MENU GŁÓWNE     \n");
+    cout << "======================\n";
+    bool validInput = false;
+    while (!validInput) {
+        cout << PL("1. Rozpocznij grę\n");
+        cout << PL("2. Załaduj grę\n");
+        cout << PL("3. Wyjdź z gry\n");
+        int input;
+        cin >> input;
+        switch (input) {
+            case 1:
+                validInput = true;
+                startGame();
+                break;
+            case 2:
+                validInput = true;
+                loadGame();
+                break;
+            case 3:
+                validInput = true;
+                exit(0);
+                break;
+        }
+    }
+}
+
+void startGame (){
+
+    firstTimeTalk();
+}
+
+void loadGame(){
+   
+}
+
+void setClass(string playerClass){
+    if (playerClass == "Wojownik"){
+        player.playerClass = "Wojownik";
+        player.maxHp = 200;
+        player.str = 10;
+        player.dex = 4;
+        player.intl = 1;
+    }
+    else if (playerClass == "Mag"){
+        player.playerClass = "Mag";
+        player.maxHp = 100;
+        player.str = 4;
+        player.dex = 4;
+        player.intl = 14;
+    }
+    else if (playerClass == "Łucznik"){
+        player.playerClass = "Łucznik";
+        player.maxHp = 150;
+        player.str = 6;
+        player.dex = 11;
+        player.intl = 3;
+    }
+    cout << PL("Wybrałeś klase ") << PL(playerClass.c_str()) << endl;
+}
+
+void mainLoop(){
+    cout << "=====================\n";
+    cout << PL("Co chcesz teraz zrobić?\n");
+    cout << PL("=====================\n");
+    cout << PL("1. Porozmawiaj z Vittore\n");
+    cout << PL("2. Idź zwiedzać teren\n");
+    cout << PL("3. Zaatakuj ") << enemies.name
+}
+
+void chooseClass (){
+    
+    bool validInput = false;
+    while (!validInput) {
+    cout << PL("Wybierz swoją klase\n");
+    cout << PL("1. Wojownik\n");
+    cout << PL("2. Mag\n");
+    cout << PL("3. Łucznik\n");
+    int input;
+    cin >> input;
+        switch (input) {
+            case 1:
+                validInput = true;
+                startGame();
+                break;
+            case 2:
+                validInput = true;
+                loadGame();
+                break;
+            case 3:
+                validInput = true;
+                exit(0);
+                break;
+
+        }
+    }
+}
+
+void firstTimeTalk () {
+    cout << PL("W wiosce na północy Europy, wśród zimnych wiatrów i mroźnych poranków...");
+    cout << PL("Żył młody chłopiec imieniem Arvid, który miał zaledwie 14 lat.");
+
+    cout << PL("\nJego rodzina postanowiła opuścić dom i wyruszyć w nieznane...");
+    cout << PL("Szukając lepszego życia na południu, gdzie czekały obfite plony i bogate miasta.");
+
+    // The storm
+    cout << PL("\nPewnej nocy na wzburzonym morzu...");
+    cout << PL("Statek trafił w sam środek sztormu. Potężne fale i ryczący wiatr nie dawały za wygraną.");
+    cout << PL("Arvid pamiętał jedynie przerażone krzyki... a potem ciemność.");
+
+    // Waking up in the forest
+    cout << PL("\nObudził się na brzegu, w lesie pełnym gęstych drzew i dziwnych odgłosów.");
+    cout << PL("Wszystko, co miał przy sobie, to mokre ubranie, nóż od ojca i zniszczona sakwa.");
+
+    // Meeting the fallen warrior
+    cout << PL("\nPrzemierzając las, dotarł do polany.");
+    cout << PL("Na głazie siedziała postać w zbroi, pogrążona w zadumie...");
+    cout << PL("Był to upadły wojownik, Vittore.");
+    cout << PL("– Kim jesteś? – zapytał głosem chropawym jak zardzewiały metal.");
+// Bonding with Vittore
+    cout << PL("\nVittore, początkowo niechętny, postanowił pomóc chłopcu.");
+    cout << PL("Wspólnie przemierzali las, ucząc Arvida tropienia, walki i przetrwania.");
+    cout << PL("Między nimi narodziła się niezwykła więź, która zmieniła ich oboje.");
+
+    // The trial of strength
+    cout << PL("\nPewnego dnia natknęli się na bandę rabusiów...");
+    cout << PL("Vittore walczył z zaciętością, by ochronić Arvida.");
+    cout << PL("Choć młody chłopiec trząsł się ze strachu, po raz pierwszy użył noża w walce.");
+
+    // Reaching the village
+    cout << PL("\nDotarli do włoskiej wioski, gdzie Vittore pomógł Arvidowi znaleźć schronienie.");
+    cout << PL("Sam wojownik ruszył dalej, obiecując chłopcu, że jeszcze się spotkają.");
+
+    // Growing up
+    cout << PL("\nLata mijały, a Arvid dorastał, pracując jako pomocnik kowala.");
+    cout << PL("Nigdy nie zapomniał o swoim nauczycielu i jego poświęceniu.");
+    cout << PL("Na swoje 18. urodziny złożył przysięgę: odnaleźć Vittore i odkupić jego honor.");
+
+    // Preparing for the journey
+    cout << PL("\nArvid wyruszył w długą podróż, zbierając informacje o swoim dawnym mentorze.");
+    cout << PL("Pomagał ludziom w wioskach, naprawiał narzędzia i walczył z bandytami.");
+    cout << PL("Zdobył przydomek „Młody Włócznik”, choć walczył mieczem, który sam stworzył.");
+
+    // Symbol of determination
+    cout << PL("\nPrzed opuszczeniem wioski kowal wręczył mu broszę w kształcie płomienia...");
+    cout << PL("Była symbolem determinacji i hartu ducha, które miały go prowadzić na drodze honoru.");
+
+    // Ending note
+    cout << PL("\nPrzygoda Arvida dopiero się zaczynała. Czy odnajdzie Vittore? Czy pozna prawdę?");
+    cout << PL("Odpowiedź na te pytania kryła się daleko w górach, gdzie czekały nowe wyzwania...");
+
+}
+
+
+string PL( const char * text )
+{
+ string result;
+ for(; * text; text++ )
+ switch( * text )
+ {
+ case 'ą': result += static_cast < char >( 0xa5 ); break;
+ case 'ć': result += static_cast < char >( 0x86 ); break;
+ case 'ę': result += static_cast < char >( 0xa9 ); break;
+ case 'ł': result += static_cast < char >( 0x88 ); break;
+ case 'ń': result += static_cast < char >( 0xe4 ); break;
+ case 'ó': result += static_cast < char >( 0xa2 ); break;
+ case 'ś': result += static_cast < char >( 0x98 ); break;
+ case 'ż': result += static_cast < char >( 0xbe ); break;
+ case 'ź': result += static_cast < char >( 0xab ); break;
+ case 'Ą': result += static_cast < char >( 0xa4 ); break;
+ case 'Ć': result += static_cast < char >( 0x8f ); break;
+ case 'Ę': result += static_cast < char >( 0xa8 ); break;
+ case 'Ł': result += static_cast < char >( 0x9d ); break;
+ case 'Ń': result += static_cast < char >( 0xe3 ); break;
+ case 'Ó': result += static_cast < char >( 0xe0 ); break;
+ case 'Ś': result += static_cast < char >( 0x97 ); break;
+ case 'Ż': result += static_cast < char >( 0xbd ); break;
+ case 'Ź': result += static_cast < char >( 0x8d ); break;
+ default: result += * text; break;
+ }
+ return result;
+}
+
+void setTextColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}

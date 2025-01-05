@@ -1,0 +1,987 @@
+#include <iostream>
+#include <cstdlib>
+#include <windows.h>
+#include <string>
+
+using namespace std;
+struct Player{
+    int hp;
+    int str;
+    int dex;
+    int intl;
+    int exp;
+    int maxHp;
+    int maxExp;
+    string playerClass;
+    string currentLocation = "Sant'Elia";
+};
+
+Player player;
+
+struct Enemy{
+    int hp;
+    int maxHp;
+    int attack;
+    int expGive;
+    int goldGive;
+    string name;
+    string location;
+};
+
+Enemy enemy;
+Enemy enemies[11] = {
+    {50,50,10,10,20,"Centaur","Sant'Elia"},
+    {50,50,10,10,20,"Szkielet","Sant'Elia"},
+    {50,50,10,10,20,"Najemnik","Montefalco"},
+    {50,50,10,10,20,"Łucznik Twierdzy","Montefalco"},
+    {50,50,10,10,20,"Uliczny Rabuś","Amalfi"},
+    {50,50,10,10,20,"Szpieg","Amalfi"},
+    {50,50,10,10,20,"Gladiator ","Ruiny Amfiteatru w Weronie"},
+    {50,50,10,10,20,"Strażnik Obozu","Ruiny Amfiteatru w Weronie"},
+    {50,50,10,10,20,"Wyznawca","Klasztor na Monte Cassino"},
+    {50,50,10,10,20,"Inkwizytor","Klasztor na Monte Cassino"},
+    {50,50,10,10,20,"Cesare – Przełożony Klasztoru","Klasztor na Monte Cassino"},
+};
+
+string PL( const char * text );
+void setTextColor(int color);
+void firstTimeTalk ();
+void chooseClass ();
+void menu();
+void startGame();
+void loadGame();
+void mainLoop();
+void eliaTalk();
+void montefalcoTalk();
+void monteTalk();
+void amalfiTalk();
+void weronaTalk();
+void talkToVittore();
+void explore();
+void startFight(int enemyhp, int enemymaxHp, int enemyattack, int enemyexpGive, int enemyGoldGive, string enemyname, string enemylocation);
+void setEnemy(int enemyhp, int enemymaxHp, int enemyattack, int enemyexpGive, int enemyGoldGive, string enemyname, string enemylocation);
+void archerAscii();
+void thiefAscii();
+void spyAscii();
+void gladiatorAscii();
+void centaurAscii();
+void skeletonAscii();
+void guardAscii();
+void confessAscii();
+void inkvisitorAscii();
+void cesareAscii();
+void tenantAscii();
+
+int main() {
+
+    menu();
+
+
+
+return 0;
+}
+
+void menu (){
+    cout << "======================\n";
+    cout << PL("      MENU GŁÓWNE     \n");
+    cout << "======================\n";
+    bool validInput = false;
+    while (!validInput) {
+        cout << PL("1. Rozpocznij grę\n");
+        cout << PL("2. Załaduj grę\n");
+        cout << PL("3. Wyjdź z gry\n");
+        int input;
+        cin >> input;
+        switch (input) {
+            case 1:
+                validInput = true;
+                startGame();
+                break;
+            case 2:
+                validInput = true;
+                loadGame();
+                break;
+            case 3:
+                validInput = true;
+                exit(0);
+                break;
+        }
+    }
+}
+
+void startGame (){
+
+    firstTimeTalk();
+}
+
+void loadGame(){
+   
+}
+
+void setClass(string playerClass){
+    if (playerClass == "Wojownik"){
+        player.playerClass = "Wojownik";
+        player.maxHp = 200;
+        player.str = 10;
+        player.dex = 4;
+        player.intl = 1;
+    }
+    else if (playerClass == "Mag"){
+        player.playerClass = "Mag";
+        player.maxHp = 100;
+        player.str = 4;
+        player.dex = 4;
+        player.intl = 14;
+    }
+    else if (playerClass == "Łucznik"){
+        player.playerClass = "Łucznik";
+        player.maxHp = 150;
+        player.str = 6;
+        player.dex = 11;
+        player.intl = 3;
+    }
+    cout << PL("Wybrałeś klase ") << PL(playerClass.c_str()) << endl;
+}
+
+void mainLoop(){
+    Enemy potentialEnemies [10];
+    for (int i=0; i<10; i++){
+        if (player.currentLocation == enemies[i].location) {
+            potentialEnemies [i] = enemies[i];
+        }
+    }
+    bool validInput = false;
+    while (!validInput){
+    cout << "=====================\n";
+    cout << PL("Co chcesz teraz zrobić?\n");
+    cout << PL("=====================\n");
+    cout << PL("1. Porozmawiaj z Vittore\n");
+    cout << PL("2. Idź zwiedzać teren\n");
+    cout << PL("3. Zaatakuj ") << PL(potentialEnemies[0].location.c_str()) << endl;
+    cout << PL("4. Zaatakuj ") << PL(potentialEnemies[1].location.c_str()) << endl;
+    cout << PL("5. Zapisz grę i wyjdź do menu");
+    int input;
+    cin >> input;
+        switch (input) {
+            case 1:
+                validInput = true;
+                talkToVittore();
+                validInput = false;
+                break;
+            case 2:
+                validInput = true;
+                explore();
+                validInput = false;
+                break;
+            case 3:
+                validInput = true;
+                startFight(potentialEnemies[0].hp,potentialEnemies[0].maxHp,potentialEnemies[0].attack,potentialEnemies[0].expGive,potentialEnemies[0].goldGive,potentialEnemies[0].name,potentialEnemies[0].location);
+            
+        }
+    }
+}
+
+void explore(){
+    string dots = "...";
+    cout << PL("Zwiedzanie terenu");
+    for (int i=0; i<dots.size(); i++){
+        Sleep(500);
+        cout << dots[i];
+    }
+    srand (time(NULL));
+    int random = rand()%100;
+    if (random<20){
+        cout << PL("Wpadłeś w płuapke i tracisz 10 punktów zdrowia\n");
+        player.hp -= 10;
+    }
+    else {
+        cout << PL("Podczas wędrówki znalazłeś miksturę, którą wypiłeś i odzyskałeś 5 punktów zdrowia\n");
+        player.hp += 5;
+    }
+}
+
+void talkToVittore (){
+    if (player.currentLocation == "Sant'Elia"){
+        eliaTalk();
+     }
+     else if (player.currentLocation == "Montefalco"){
+        montefalcoTalk();
+     }
+     else if (player.currentLocation == "Amalfi"){
+        amalfiTalk();
+     }
+     else if (player.currentLocation == "Ruiny Amfiteatru w Weronie"){
+        weronaTalk();
+     }
+     else if (player.currentLocation == "Klasztor na Monte Cassino"){
+        monteTalk();
+     }
+
+};
+
+void eliaTalk(){
+    cout << PL("To miejsce wygląda jak forteca śmierci... Widziałem wiele twierdz, ale ta ma w sobie coś... mrocznego.\n");
+    cout << PL("Po dostrzeganiu strażników:\n");
+    cout << PL("Cisza przed burzą... Musimy być ostrożni, bo te mury słuchają. Każdy krok może nas zdradzić.\n");
+};
+
+void montefalcoTalk(){
+    cout << PL("Montefalco… Miasto winorośli i wiatru, ale to tylko złudzenie.\n");
+    cout << PL("Pod jego cichymi uliczkami kryją się korytarze pełne szeptów i cieni.\n");
+    cout << PL("To miejsce nie jest spokojne, Arvid. To labirynt kłamstw, stworzony przez ludzi, którzy dawno zatracili swoją moralność.\n");
+
+    cout << PL("Czujesz to? Zapach fermentującego wina… ale jest w tym coś jeszcze.\n");
+    cout << PL("Woń krwi, ukryta w piwnicach, gdzie beczki służą za grobowce, a winorośl pije coś więcej niż tylko deszcz.\n");
+
+    cout << PL("Cesare miał tu swoje kontakty. Ludzi, którzy sprzedali swoje dusze za bogactwo.\n");
+    cout << PL("Każdy kamień tej osady widział więcej zdrady niż najciemniejsze zamki, a każdy kielich wina kryje smak rozpaczy.\n");
+
+    cout << PL("To tutaj, w Montefalco, będziemy musieli uważać bardziej niż kiedykolwiek.\n");
+    cout << PL("Nie tylko ludzie tu polują. Nawet ziemia wydaje się obserwować nasze kroki, czekając na moment, by pochłonąć nas w swojej ciszy.\n");
+}
+
+void weronaTalk(){
+    cout << PL("Werona… Amfiteatr. Niegdyś miejsce wielkich igrzysk, gdzie krew była rozlewana dla zabawy tłumu.\n");
+    cout << PL("Teraz, to tylko zrujnowana arena, pełna cieni przeszłości. Ale wciąż czuć tu zapach śmierci, nie tylko w murach, ale i w ludziach, którzy go tu zamieszkali.\n");
+    cout << PL("Lucius uczynił z tego miejsca swoją własną arenę śmierci. Będziemy musieli sięgnąć głębiej, Arvid, jeśli chcemy go pokonać.\n");
+}
+
+void amalfiTalk(){
+    cout << PL("Amalfi… Miasto winorośli i wiatru, ale to tylko złudzenie.\n");
+    cout << PL("Pod jego cichymi uliczkami kryją się korytarze pełne szeptów i cieni.\n");
+    cout << PL("To miejsce nie jest spokojne, Arvid. To labirynt kłamstw, stworzony przez ludzi, którzy dawno zatracili swoją moralność.\n");
+
+    cout << PL("Czujesz to? Zapach fermentującego wina… ale jest w tym coś jeszcze.\n");
+    cout << PL("Woń krwi, ukryta w piwnicach, gdzie beczki służą za grobowce, a winorośl pije coś więcej niż tylko deszcz.\n");
+
+    cout << PL("Cesare miał tu swoje kontakty. Ludzi, którzy sprzedali swoje dusze za bogactwo.\n");
+    cout << PL("Każdy kamień tej osady widział więcej zdrady niż najciemniejsze zamki, a każdy kielich wina kryje smak rozpaczy.\n");
+
+    cout << PL("To tutaj, w Amalfi, będziemy musieli uważać bardziej niż kiedykolwiek.\n");
+    cout << PL("Nie tylko ludzie tu polują. Nawet ziemia wydaje się obserwować nasze kroki, czekając na moment, by pochłonąć nas w swojej ciszy.\n");
+}
+
+void monteTalk(){
+    cout << PL("Monte Cassino... To miejsce na pierwszy rzut oka wygląda na bastion duchowości, ale w głębi duszy wiem, że kryje coś o wiele bardziej mrocznego.\n");
+    cout << PL("Wysokie mury, wieże, krużganki pełne modlitw... ale coś w tej ciszy nie pasuje. To nie miejsce, gdzie odnajdziesz spokój, Arvid. To pułapka, która czeka, by nas pochłonąć.\n");
+}
+
+void startFight(int enemyhp, int enemymaxHp, int enemyattack, int enemyexpGive, int enemyGoldGive, string enemyname, string enemylocation){
+    setEnemy( enemyhp,  enemymaxHp,  enemyattack,  enemyexpGive,  enemyGoldGive,  enemyname,  enemylocation);
+    displayEnemy();
+    bool playerTurn = true;
+    bool isFighting = true;
+    while (player.hp > 0 && enemy.hp > 0 && isFighting){
+        while (playerTurn){
+            cout << PL("1. Zaatakuj");
+            cout << PL("2. Ucieknij");
+            int input;
+            cin >> input;
+            switch (input){
+                case 1:
+                    attackEnemy();
+                    playerTurn = false;
+                    break;
+                case 2:
+                    cout << PL("Udało ci się uciec!");
+                    isFighting = false;
+                    break;
+            }
+        }
+        displayEnemy();
+        attackPlayer();
+        playerTurn = true;
+    }
+    if (enemy.hp < 0){
+        cout << PL("Pokonałeś przeciwnika!\n");
+        cout << PL("Otrzymałeś ") << enemy.expGive << PL(" expa oraz ") << enemy.goldGive << PL(" golda!");
+
+    }
+    else if (player.hp < 0){
+        cout << PL("Zostałeś pokonany!");
+        exit(0);
+    }
+}
+
+void attackEnemy(){
+    int damage = calculateDamage();
+    string dots = "...";
+    cout << PL("Atakuje");
+    for (int i=0; i<dots.size(); i++){
+        Sleep(500);
+        cout << dots[i];
+    }
+    enemy.hp -= damage;
+    cout << PL("Zadałeś ") << damage;
+    cout << PL("Przeciwnikowi zostało ") << enemy.hp;
+
+}
+
+void attackPlayer(){
+        int damage = enemy.attack;
+    string dots = "...";
+    cout << PL("Przeciwnik atakuje");
+    for (int i=0; i<dots.size(); i++){
+        Sleep(200);
+        cout << dots[i];
+    }
+    player.hp -= damage;
+    cout << PL("Przeciwnik zadał ci ") << damage;
+    cout << PL("Zostało ci ") << player.hp;
+
+}
+
+
+void displayEnemy(){
+        if (enemy.name == "Centaur"){
+        centaurAscii();
+    }
+    else if (enemy.name == "Szkielet"){
+        skeletonAscii();
+    }
+    else if (enemy.name == "Najemnik"){
+        tenantAscii();
+    }
+    else if (enemy.name == "Łucznik Twierdzy"){
+        archerAscii();
+    }
+    else if (enemy.name == "Uliczny Rabuś"){
+        thiefAscii();
+    }
+    else if (enemy.name == "Szpieg"){
+        spyAscii();
+    }
+    else if (enemy.name == "Gladiator"){
+        gladiatorAscii();
+    }
+    else if (enemy.name == "Strażnik Obozu"){
+        guardAscii();
+    }
+    else if (enemy.name == "Wyznawca"){
+        confessAscii();
+    }
+    else if (enemy.name == "Inkwizytor"){
+        inkvisitorAscii();
+    }
+    else if (enemy.name == "Cesare – Przełożony Klasztoru"){
+        cesareAscii();
+    }
+}
+
+
+int calculateDamage(){
+    int damage = player.dex + player.intl + player.str;
+    return damage;
+}
+
+void setEnemy(int enemyhp, int enemymaxHp, int enemyattack, int enemyexpGive, int enemyGoldGive, string enemyname, string enemylocation){
+    enemy.hp = enemyhp;
+    enemy.maxHp = enemymaxHp;
+    enemy.attack = enemyattack;
+    enemy.expGive = enemyexpGive;
+    enemy.goldGive = enemyGoldGive;
+    enemy.name = enemyname;
+    enemy.location = enemylocation;
+}
+
+void chooseClass (){
+    
+    bool validInput = false;
+    while (!validInput) {
+    cout << PL("Wybierz swoją klase\n");
+    cout << PL("1. Wojownik\n");
+    cout << PL("2. Mag\n");
+    cout << PL("3. Łucznik\n");
+    int input;
+    cin >> input;
+        switch (input) {
+            case 1:
+                validInput = true;
+                startGame();
+                break;
+            case 2:
+                validInput = true;
+                loadGame();
+                break;
+            case 3:
+                validInput = true;
+                exit(0);
+                break;
+
+        }
+    }
+}
+
+void firstTimeTalk () {
+    cout << PL("W wiosce na północy Europy, wśród zimnych wiatrów i mroźnych poranków...");
+    cout << PL("Żył młody chłopiec imieniem Arvid, który miał zaledwie 14 lat.");
+
+    cout << PL("\nJego rodzina postanowiła opuścić dom i wyruszyć w nieznane...");
+    cout << PL("Szukając lepszego życia na południu, gdzie czekały obfite plony i bogate miasta.");
+
+    // The storm
+    cout << PL("\nPewnej nocy na wzburzonym morzu...");
+    cout << PL("Statek trafił w sam środek sztormu. Potężne fale i ryczący wiatr nie dawały za wygraną.");
+    cout << PL("Arvid pamiętał jedynie przerażone krzyki... a potem ciemność.");
+
+    // Waking up in the forest
+    cout << PL("\nObudził się na brzegu, w lesie pełnym gęstych drzew i dziwnych odgłosów.");
+    cout << PL("Wszystko, co miał przy sobie, to mokre ubranie, nóż od ojca i zniszczona sakwa.");
+
+    // Meeting the fallen warrior
+    cout << PL("\nPrzemierzając las, dotarł do polany.");
+    cout << PL("Na głazie siedziała postać w zbroi, pogrążona w zadumie...");
+    cout << PL("Był to upadły wojownik, Vittore.");
+    cout << PL("– Kim jesteś? – zapytał głosem chropawym jak zardzewiały metal.");
+// Bonding with Vittore
+    cout << PL("\nVittore, początkowo niechętny, postanowił pomóc chłopcu.");
+    cout << PL("Wspólnie przemierzali las, ucząc Arvida tropienia, walki i przetrwania.");
+    cout << PL("Między nimi narodziła się niezwykła więź, która zmieniła ich oboje.");
+
+    // The trial of strength
+    cout << PL("\nPewnego dnia natknęli się na bandę rabusiów...");
+    cout << PL("Vittore walczył z zaciętością, by ochronić Arvida.");
+    cout << PL("Choć młody chłopiec trząsł się ze strachu, po raz pierwszy użył noża w walce.");
+
+    // Reaching the village
+    cout << PL("\nDotarli do włoskiej wioski, gdzie Vittore pomógł Arvidowi znaleźć schronienie.");
+    cout << PL("Sam wojownik ruszył dalej, obiecując chłopcu, że jeszcze się spotkają.");
+
+    // Growing up
+    cout << PL("\nLata mijały, a Arvid dorastał, pracując jako pomocnik kowala.");
+    cout << PL("Nigdy nie zapomniał o swoim nauczycielu i jego poświęceniu.");
+    cout << PL("Na swoje 18. urodziny złożył przysięgę: odnaleźć Vittore i odkupić jego honor.");
+
+    // Preparing for the journey
+    cout << PL("\nArvid wyruszył w długą podróż, zbierając informacje o swoim dawnym mentorze.");
+    cout << PL("Pomagał ludziom w wioskach, naprawiał narzędzia i walczył z bandytami.");
+    cout << PL("Zdobył przydomek „Młody Włócznik”, choć walczył mieczem, który sam stworzył.");
+
+    // Symbol of determination
+    cout << PL("\nPrzed opuszczeniem wioski kowal wręczył mu broszę w kształcie płomienia...");
+    cout << PL("Była symbolem determinacji i hartu ducha, które miały go prowadzić na drodze honoru.");
+
+    // Ending note
+    cout << PL("\nPrzygoda Arvida dopiero się zaczynała. Czy odnajdzie Vittore? Czy pozna prawdę?");
+    cout << PL("Odpowiedź na te pytania kryła się daleko w górach, gdzie czekały nowe wyzwania...");
+
+}
+
+
+string PL( const char * text )
+{
+ string result;
+ for(; * text; text++ )
+ switch( * text )
+ {
+ case 'ą': result += static_cast < char >( 0xa5 ); break;
+ case 'ć': result += static_cast < char >( 0x86 ); break;
+ case 'ę': result += static_cast < char >( 0xa9 ); break;
+ case 'ł': result += static_cast < char >( 0x88 ); break;
+ case 'ń': result += static_cast < char >( 0xe4 ); break;
+ case 'ó': result += static_cast < char >( 0xa2 ); break;
+ case 'ś': result += static_cast < char >( 0x98 ); break;
+ case 'ż': result += static_cast < char >( 0xbe ); break;
+ case 'ź': result += static_cast < char >( 0xab ); break;
+ case 'Ą': result += static_cast < char >( 0xa4 ); break;
+ case 'Ć': result += static_cast < char >( 0x8f ); break;
+ case 'Ę': result += static_cast < char >( 0xa8 ); break;
+ case 'Ł': result += static_cast < char >( 0x9d ); break;
+ case 'Ń': result += static_cast < char >( 0xe3 ); break;
+ case 'Ó': result += static_cast < char >( 0xe0 ); break;
+ case 'Ś': result += static_cast < char >( 0x97 ); break;
+ case 'Ż': result += static_cast < char >( 0xbd ); break;
+ case 'Ź': result += static_cast < char >( 0x8d ); break;
+ default: result += * text; break;
+ }
+ return result;
+}
+
+void setTextColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void archerAscii() {
+    cout << R"END(
+                                                       |
+                                                        \.
+                                                        /|.
+                                                      /  `|.
+                                                    /     |.
+                                                  /       |.
+                                                /         `|.
+                                              /            |.
+                                            /              |.
+                                          /                |.
+     __                                 /                  `|.
+      -\                              /                     |.
+        \\                          /                       |.
+          \\                      /                         |.
+           \|                   /                           |\
+             \#####\          /                             ||
+         ==###########>     /                               ||
+          \##==      \    /                                 ||
+     ______ =       =|__/___                                ||
+ ,--' ,----`-,__ ___/'  --,-`-==============================##==========>
+\               '        ##_______ ______   ______,--,____,=##,__
+ `,    __==    ___,-,__,--'#'  ==='      `-'              | ##,-/
+   `-,____,---'       \####\              |        ____,--\_##,/
+       #_              |##   \  _____,---==,__,---'         ##
+        #              ]===--==\                            ||
+        #,             ]         \                          ||
+         #_            |           \                        ||
+          ##_       __/'             \                      ||
+           ####='     |                \                    |/
+            ###       |                  \                  |.
+            ##       _'                    \                |.
+           ###=======]                       \              |.
+          ///        |                         \           ,|.
+          //         |                           \         |.
+                                                   \      ,|.
+                                                     \    |.
+                                                       \  |.
+                                                         \|.
+                                                         /.
+                                                        |
+
+    )END";
+}
+
+
+void thiefAscii() {
+    cout << R"END(
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀⠉⠛⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠿⣷⡄⠀⣀⣀⠓⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⣠⣶⣦⣈⠻⣦⠈⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢻⣿⣿⣿⣿⣿⣿⡿⠁⣼⡿⠻⣿⣿⣷⣄⣠⣴⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠻⣿⣿⣿⣿⡟⠀⢸⣿⣿⣦⣄⡉⠛⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠈⠛⠿⠋⠀⠀⢻⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⣀⣀⣤⣶⣄⠀⠀⠈⠿⢿⣿⣿⣿⣿⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠸⠟⠛⠉⠻⣿⣧⡀⣼⣶⣤⣄⠉⠉⠛⠛⠻⢿⣿⣦⡀⠀⠀⠀⣠⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⡿⠋⠁⠀⠀⠀⠀⠀⠀⠙⢿⣿⣆⣠⣾⠟⠁⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⡿⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    )END";
+
+}
+
+void spyAscii() {
+    cout << R"END(
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡀⠀⠀⢀⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣤⣤⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⢿⣿⣿⣿⣿⣿⣿⡿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣀⣠⠀⣶⣤⣄⣉⣉⣉⣉⣠⣤⣶⠀⣄⣀⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⣶⣾⣿⣿⣿⣿⣦⣄⣉⣙⣛⣛⣛⣛⣋⣉⣠⣴⣿⣿⣿⣿⣷⣶⠀⠀⠀
+⠀⠀⠀⠀⠈⠉⠉⠛⠛⠛⠻⠿⠿⠿⠿⠿⠿⠿⠿⠟⠛⠛⠛⠉⠉⠁⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⣆⠀⠀⠀⢠⡄⠀⠀⠀⣰⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⣶⣾⣿⡆⠸⣿⣶⣶⣾⣿⣿⣷⣶⣶⣿⠇⢰⣿⣷⣶⣄⡀⠀⠀⠀
+⠀⠀⠺⠿⣿⣿⣿⣿⣿⣄⠙⢿⣿⣿⣿⣿⣿⣿⡿⠋⣠⣿⣿⣿⣿⣿⠿⠗⠀⠀
+⠀⠀⠀⠀⠀⠙⠻⣿⣿⣿⣷⡄⠈⠙⠛⠛⠋⠁⢠⣾⣿⣿⣿⠟⠋⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣀⣤⣬⣿⣿⣿⣇⠐⣿⣿⣿⣿⠂⣸⣿⣿⣿⣥⣤⣀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠘⠻⠿⠿⢿⣿⣿⣿⣧⠈⠿⠿⠁⣼⣿⣿⣿⡿⠿⠿⠟⠃⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⢿⠀⣶⣦⠀⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+    )END";
+
+}
+void gladiatorAscii() {
+    cout << R"END(
+                           __.--|~|--.__            Randall            ,,;/;
+                         /~     | |    ;~\          Nortman         ,;;;/;;'
+                        /|      | |    ;~\\                      ,;;;;/;;;'
+                       |/|      \_/   ;;;|\                    ,;;;;/;;;;'
+                       |/ \          ;;;/  )                 ,;;;;/;;;;;'
+                   ___ | ______     ;_____ |___....__      ,;;;;/;;;;;'
+             ___.-~ \\(| \  \.\ \__/ /./ /:|)~   ~   \   ,;;;;/;;;;;'
+         /~~~    ~\    |  ~-.     |   .-~: |//  _.-~~--,;;;;/;;;;;'
+        (.-~___     \.'|    | /-.__.-\|::::| //~     ,;;;;/;;;;;'
+        /      ~~--._ \|   /          `\:: |/      ,;;;;/;;;;;'
+     .-|             ~~|   |  /V""""V\ |:  |     ,;;;;/;;;;;' \
+    /                   \  |  ~`^~~^'~ |  /    ,;;;;/;;;;;'    ;
+   (        \             \|`\._____./'|/    ,;;;;/;;;;;'      '\
+  / \        \                             ,;;;;/;;;;;'     /    |
+ |            |                          ,;;;;/;;;;;'      |     |
+|`-._          |                       ,;;;;/;;;;;'              \
+|             /                      ,;;;;/;;;;;'  \              \__________
+(             )                 |  ,;;;;/;;;;;'      |        _.--~
+ \          \/ \              ,  ;;;;;/;;;;;'       /(     .-~_..--~~~~~~~~~~
+ \__         '  `       ,     ,;;;;;/;;;;;'    .   /  \   / /~
+ /          \'  |`._______ ,;;;;;;/;;;;;;'    /   :    \/'/'       /|_/|   ``|
+| _.-~~~~-._ |   \ __   .,;;;;;;/;;;;;;' ~~~~'   .'    | |       /~ (/\/    ||
+/~ _.-~~~-._\    /~/   ;;;;;;;/;;;;;;;'          |    | |       / ~/_-'|-   /|
+(/~         \| /' |   ;;;;;;/;;;;;;;;            ;   | |       (.-~;  /-   / |
+|            /___ `-,;;;;;/;;;;;;;;'            |   | |      ,/)  /  /-   /  |
+ \            \  `-.`---/;;;;;;;;;' |          _'   |T|    /'('  /  /|- _/  //
+   \           /~~/ `-. |;;;;;''    ______.--~~ ~\  |u|  ,~)')  /   | \~-==//
+     \      /~(   `-\  `-.`-;   /|    ))   __-####\ |a|   (,   /|    |  \
+       \  /~.  `-.   `-.( `-.`~~ /##############'~~)| |   '   / |    |   ~\
+        \(   \    `-._ /~)_/|  /############'       |X|      /  \     \_\  `\
+        ,~`\  `-._  / )#####|/############'   /     |i|  _--~ _/ | .-~~____--'
+       ,'\  `-._  ~)~~ `################'           |o| ((~>/~   \ (((' -_
+     ,'   `-.___)~~      `#############             |n|           ~-_     ~\_
+ _.,'        ,'           `###########              |g|            _-~-__    (
+|  `-.     ,'              `#########       \       | |          ((.-~~~-~_--~
+`\    `-.;'                  `#####"                | |           "     ((.-~~
+  `-._   )               \     |   |        .       |  \                 "
+      `~~  _/                  |    \               |   `---------------------
+        |/~                `.  |     \        .     |  O    __.---------------
+         |                   \ ;      \             |   _.-~
+         |                    |        |            |  /  |
+          |                   |         |           |/'  |Tua Xiong
+    )END";
+
+}
+void centaurAscii() {
+    cout << R"END(
+                                             ___.....___
+                                      _.-'"""           """``--._
+                                   ,-'                ___         `-.
+                                 ,'            _.-'      ``-..       `-.
+                               ,'                             `-.       `-.
+                             ,' .                                `.        `.
+                           ,' ,'              ,                    `         `.
+    __.---.._             ;  ,'             .';                                `.
+  .' `--._   `.          :  ,'  , ;. .'   .'  ;                                 `.
+ /  mGk     /  `.        : :  ,""" ""`.  ;   :       __..__                       `.
+'---...____/`.   `.      `. `((   ,=.  `;    ;   _,-'      ``-.                    `.
+             `.   `.      `;/`\). %@     `.,'  .'              `-.                  `.
+              `.   `.       \_%@\         )   '         ___       `.     .           :
+               `.    `.       \ |_, .    /.         _.''   ``-._    '     `.         :           _
+                `.    `.       \  .`;   /  `.     .'            `-.        `.        `.           `:._
+                 `.     `-..__  `-.___,` .--..  ,'                 `.       `.        `.            ) `.
+                  `.   .'     ``--.._`.,'     `-.                    `.                `.          ,'   `.
+                   `.                ,':         `-._                  `.               `.        ,'     :
+                     `--..__    _..-'  `.            `-._               `.                `._   _,'      :
+                          _.-'''           ,_            `-.             `.                  `-'   ;     :
+                         ;%;             ,'  `-.._         `.             `.                      ,'     :
+                         :                    ;;  `-.       :              `.                  --'      ,'
+                         `.                 ,';      `.     `.              `.   `.                    ,'
+                           `.__.-'         ; ;        `.     :               `.   `-._                ,'
+                             :           ,' ;          `.    `.               `.      `--..          ,'
+                             :          ,' ;            `.    `           _     `-._               .'
+                             :         ,' ,'             `.   `.         ; `        ``--...__..--''
+                             :       ,'.  :               :    :        ;:  `
+                             :         :  :               :    :       ; ;   :
+                             :    ,-""""""-`.             ;    :     ,','    :
+                             :  ,'           `._       _.;     :.._ ; ,     ;
+                            ,' ;                `--..,'.',::::::   '.'   _.'
+                            : ;                    .'   ` :;:;:;     `,-"`.
+                            :;                    ;       ' ' '       :.   `
+                            :                                         :::   `
+                            :                                         :::    :
+                           ,'                                         ::'    :
+                         ,'           `.          _                   :'     :
+                       ,'              :           `.                 :      :
+                     ,'                :            `.                :      :
+                   ,'                  ;             `.               :      `.
+                 ,'                _.-'``---...____.-'`.              :        `
+                ,'           _..-'' ;       ,'         :              `         `-.__
+                :     _..--'';     ;       ,'          `               `.            `.
+                `.            `.  ;       ;             `.          `-.  `.    `-.     :
+                  `.            `.       ;                `.           `.  `.     `.   :
+                    `-._          `.    ;                   `-.         `   :.     `   `.
+                        `-._        `-.;                       `.           ; `.        :
+                            `-._       `-.-.                    ;          ,'   `.      `.
+                               ;`-._     `. `-._                :          ;     `.      :
+                              ,'    `-.       ( `.              :         :       `.     `.
+                              '     ;  `-.-._(   )              :        ,'        `.     :
+                             ;     ;          `"'               :        ;          `     `.
+                            ;     ;                             :       :            `     :
+                           ;     ;                              :       ;            `.    `.
+                          ;     ;                               ;      ;              `     :
+                         ,'   ,'                               ,      ;               `     :
+                        .'`.` ;                                :      ;                `    `.
+                        :    ,'                                :     :                 :     `.
+                        :    ;                                 ;     ;                 `.  `. `.
+                        ;`-';                                 ,     :                   `.`.:.':
+                       ;   ;                                  ;     :                    :  : ,'
+                       `""'                                  ,      ;                    :    :
+                                                             ;     :                     :    :
+                                                            ,      :                     :`-':'
+                                                            ;      :                     :__.'
+                                                           , :      :
+                                                           : `.,'  ;
+                                                           :     ,'
+                                                           :     :
+                                                           :.___.:
+                                                           :    ,'
+                                                           :__,'
+    )END";
+
+}
+void skeletonAscii() {
+    cout << R"END(
+                              _.--""-._
+  .                         ."         ".
+ / \    ,^.         /(     Y             |      )\
+/   `---. |--'\    (  \__..'--   -   -- -'""-.-'  )
+|        :|    `>   '.     l_..-------.._l      .'
+|      __l;__ .'      "-.__.||_.-'v'-._||`"----"
+ \  .-' | |  `              l._       _.'
+  \/    | |                   l`^^'^^'j
+        | |                _   \_____/     _
+        j |               l `--__)-'(__.--' |
+        | |               | /`---``-----'"1 |  ,-----.
+        | |               )/  `--' '---'   \'-'  ___  `-.
+        | |              //  `-'  '`----'  /  ,-'   I`.  \
+      _ L |_            //  `-.-.'`-----' /  /  |   |  `. \
+     '._' / \         _/(   `/   )- ---' ;  /__.J   L.__.\ :
+      `._;/7(-.......'  /        ) (     |  |            | |
+      `._;l _'--------_/        )-'/     :  |___.    _._./ ;
+        | |                 .__ )-'\  __  \  \  I   1   / /
+        `-'                /   `-\-(-'   \ \  `.|   | ,' /
+                           \__  `-'    __/  `-. `---'',-'
+                              )-._.-- (        `-----'
+                             )(  l\ o ('..-.
+                       _..--' _'-' '--'.-. |
+                __,,-'' _,,-''            \ \
+               f'. _,,-'                   \ \
+              ()--  |                       \ \
+                \.  |                       /  \
+                  \ \                      |._  |
+                   \ \                     |  ()|
+                    \ \                     \  /
+                     ) `-.                   | |
+                    // .__)                  | |
+                 _.//7'                      | |
+               '---'                         j_| `
+                                            (| |
+                                             |  \
+                                             |lllj
+                                             |||||  -nabis
+    )END";
+
+}
+void guardAscii() {
+    cout << R"END(
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢀⣴⣿⣿⣷⣦⡀⠀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠀⢀⣴⣾⣿⣿⣦⡀⠀
+⠀⣼⣿⣿⣿⣿⣿⣧⠀⠸⣷⣄⠀⠀⠀⠀⠀⠀⣠⣾⠇⠀⣼⣿⣿⣿⣿⣿⣧⠀
+⠀⢿⣿⣿⣿⣿⣿⡿⠀⠀⢹⣿⣷⠄⠀⠀⠠⣾⣿⡏⠀⠀⢿⣿⣿⣿⣿⣿⡿⠀
+⠀⢘⣿⣿⣿⣿⣿⠃⠀⠀⠀⠋⢁⣄⠀⠀⣠⡈⠙⠀⠀⠀⠘⣿⣿⣿⣿⣿⡃⠀
+⠀⠻⠿⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀⠹⣧⡀⠋⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⠿⠟⠀
+⠀⣷⣦⡈⢻⣿⣿⣿⣿⣿⣷⣤⠀⣀⠈⢿⣄⠀⣤⣾⣿⣿⣿⣿⣿⡟⢁⣴⣾⠀
+⠀⣿⣿⣷⠀⢿⣿⣿⡿⠛⠻⠃⣴⠟⠀⠀⠻⣦⠘⠟⠛⢿⣿⣿⡿⠀⣾⣿⣿⠀
+⠀⣿⣿⣿⡇⢸⣿⣿⠇⠀⢀⣾⠋⠀⠀⠀⠀⠙⣷⡀⠀⠸⣿⣿⡇⢸⣿⣿⣿⠀
+⠀⣿⣿⣿⡇⢸⣿⣿⠀⣠⡿⠃⠀⠀⠀⠀⠀⠀⠘⢿⣄⠀⣿⣿⡇⢸⣿⣿⣿⠀
+⠀⣿⣿⡿⢀⣾⡿⠁⣴⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣦⠈⢿⣷⡀⢿⣿⣿⠀
+⠀⠿⠛⣡⣾⠟⢀⣾⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣷⡀⠻⣷⣌⠛⠿⠀
+⠀⣶⣾⣿⠋⣠⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣄⠙⣿⣷⣶⠀
+⠀⢹⡿⠃⣴⡟⢁⣾⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⡈⢻⣦⠘⢿⡏⠀
+⠀⠘⠁⠘⠋⠀⠛⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠂⠙⠃⠈⠃⠀
+    )END";
+
+}
+void confessAscii() {
+    cout << R"END(
+                  .#MMMMMMMMMb.
+               d#+%XMMMMMMMMMMMM%b
+            /%XXMMMMMMMMMMMMMMMMMMMb
+     .-----.MMMMMMMMMMMMMMMMMMMMMMMM
+    / -----/;+MMMMMMMMX+;= =+MMMMMMMM
+   |  ----|;;MMMMMMMX-      ;M%%MMMMMX
+   |   ---'/:+MMMMMM;       X%=  MMMMM
+   |   |   /\+MMMMMM:       _._  %MMMM/
+   |   :   | |MMMMM%/_-"-. :_ _:  XMMM%
+   '.   '-/' |MMMMMM%'--'    '     |/|
+    |      _/MMMMMX%     |         | |
+    |     |'XMMMMM_/     |_        | /
+    |     |  XMMM%%;:              |-
+    |     |    %XMM+=   .---.      |
+   .'     |     %%X%:,   ---    ,-'
+   |      |         |'.      ._-':
+   |      |        /   "-----"   |
+  /       |    __./              |.
+  |       |   /,.|                 -.
+  |       |  /...|                   -..-.
+ .'       | |....\                  /......
+ |        |/|.....\                /......=-.
+ |        | |......\.             /.....,-----.
+.'          |.......'------------'......|      '.
+|           |,.........................,|       |
+|           |,......................... .       |
+|           |......................... .        |
+|          /...........................'       .'
+ |        /...........................'        |
+  '___   /.......................... |        .'
+      '-'............................'        |
+       |........................... |        .'
+       |..........................,|         |
+       |..........................-'        /
+       |.........................'         /
+       |....................... |         /
+      /........................ |        |
+     /.........................'        /
+     |.......................,'        |
+     ):......................|         |
+     |,......................|        .+
+     |.......................|       //|
+     :---.__................/       |...\
+    /       "-_______-----""|       |... |
+    .-                      |      .'... |
+   .'.'-.                   |      |.......
+  /......--.               .'     /........|
+  '.........'-------------'|     |.........|
+   |.....................,.'     |..........\
+   |....................,,|     .'............
+   |....................,,|     |............|
+   |.....................,|     |............|
+   |...................../      |............|
+   |.............,.....,/       |............| mga
+    )END";
+
+}
+void inkvisitorAscii() {
+    cout << R"END(
+                        ;;\\/;;;;;;;;
+                   ;;;;;;;;;;;;;;;;;
+                ;;;;;;;;;;;;     ;;;;;
+               ;;;;;    ;;;         \;;
+              ;;;;;      ;;          |;
+             ;;;;         ;          |
+             ;;;                     |
+              ;;                     )
+               \    ~~~~ ~~~~~~~    /
+                \    ~~~~~~~  ~~   /
+              |\ \                / /|
+               \\| %%%%%    %%%%% |//
+              [[====================]]
+               | |  ^          ^  |
+               | | :@: |/  \| :@: | |
+                \______/\  /\______/
+                 |     (@\/@)     |
+                /                  \
+               /  ;-----\  ______;  \
+               \         \/         /
+                )                  (
+               /                    \
+               \__                  /
+                \_                _/
+                 \______/\/\______/
+                  _|    /--\    |_
+                 /%%\  /"'"'\  /%%\
+  ______________/%%%%\/\'"'"/\/%%%%\______________
+ / :  :  :  /  .\%%%%%%%\"'/%%%%%%%/.  \  :  :  : \
+)  :  :  :  \.  .\%%%%%%/'"\%%%%%%/.  ./  :  :  :  (
+    )END";
+
+}
+void cesareAscii() {
+    cout << R"END(
+                                                               o .,<>., o
+                                                               |\/\/\/\/|
+                                                               '========'
+                                                               (_ SSSSSSs
+                                                               )a'`SSSSSs
+                                                              /_   SSSSSS
+                                                              .=## SSSSS
+                                                              .####  SSSSs
+                                                              ###::::SSSSS
+                                                             .;:::""""SSS
+                                                            .:;:'  . .  \\
+                                                           .::/  '     .'|
+                                                          .::( .         |
+                                                          :::)           \
+                                                          /\(            /
+                                                         /)            ( |
+                                                       .'  \  .       ./ /
+                                                    _-'    |\  .        |
+                                  _..--..   .  /"---\      | ` |      . |
+          -=====================,' _     \=(*#(7.#####()   |  `/_..   , (
+                      _.-''``';'-''-) ,.  \ '  '+/// |   .'/   \  ``-.) \
+                    ,'  _.-  ((    `-'  `._\    `` \_/_.'  )    /`-._  ) |
+                  ,'\ ,'  _.'.`:-.    \.-'                 /   <_L   )"  |
+                _/   `._,' ,')`;  `-'`'                    |     L  /    /
+               / `.   ,' ,|_/ / \                          (    <_-'     \
+               \ / `./  '  / /,' \                        /|`         `. |
+               )\   /`._   ,'`._.-\                       |)            \'
+              /  `.'    )-'.-,' )__)                      |\            `|
+             : /`. `.._(--.`':`':/ \                      ) \             \
+             |::::\     ,'/::;-))  /                      ( )`.            |
+             ||:::::  . .::':  :`-(                       |/    .          |
+             ||::::|  . :|  |==[]=:                       .        -       \
+             |||:::|  : ||  :  |  |                      /\           `     |
+ ___ ___     '|;:::|  | |'   \=[]=|                     /  \                \
+|   /_  ||``|||:::::  | ;    | |  |                     \_.'\_               `-.
+:   \_``[]--[]|::::'\_;'     )-'..`._                 .-'\``:: ` .              \
+ \___.>`''-.||:.__,'     SSt |_______`>              <_____:::.         . . \  _/
+                                                           `+a:f:......jrei'''
+    )END";
+}
+
+void tenantAscii() {
+    cout << R"END(
+                                          ,
+                                 _.="/|
+                              ,/`\ /` |
+                             /\ ./' =/
+                           /` ./_ -_/
+           .="""".=""""=./\ \/  __/ 
+          .---------.    \  / =_/
+         /^\______/^\`-._ \/ __/
+        //^\\    ' /\\-. '.\_/'
+       //_/^\     /  \  `. \..
+     .'   .'`    '-./^\   ;/ _`\
+  .-'    /           `"     / \| 
+ / (`"-./    .              -'/'
+ \  \| (   _,.`"--..,__      \`
+  `\ \ |`"`|`^^"'''^^|`\      )
+    `\\|   |   |  |   .'    .'
+jgs   `\._ |   |_,.-"` _.-"` 
+        `.`""""`_.--"``
+          `''''`
+    )END";
+
+}
+
+bool savePlayer() {
+    std::fstream file("save.txt", std::ios::out);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file for saving: " << "save.txt" << std::endl;
+        return false;
+    }
+
+    file << player.hp << "\n";
+    file << player.str << "\n";
+    file << player.dex << "\n";
+    file << player.intl << "\n";
+    file << player.exp << "\n";
+    file << player.maxHp << "\n";
+    file << player.maxExp << "\n";
+    file << player.playerClass << "\n";
+    file << player.currentLocation << "\n";
+
+    file.close();
+    return true;
+}
+
+// Function to load the player's data from a file
+bool loadPlayer() {
+    std::fstream file("save.txt", std::ios::in);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file for loading: " << "save.txt" << std::endl;
+        return false;
+    }
+
+    // Read each attribute in the same order as it was written
+    file >> player.hp;
+    file >> player.str;
+    file >> player.dex;
+    file >> player.intl;
+    file >> player.exp;
+    file >> player.maxHp;
+    file >> player.maxExp;
+
+    // Clear newline character before reading strings
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(file, player.playerClass);
+    std::getline(file, player.currentLocation);
+
+    file.close();
+    return true;
+}
