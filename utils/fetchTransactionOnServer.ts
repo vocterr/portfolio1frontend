@@ -6,7 +6,7 @@ export const fetchTransactionOnServer = async (token: any, transactionId: any) =
             method: "GET",
             headers: {
                 "Content-Type" : "application/json",
-                "Cookie" : `token=${token}`
+                Cookie : `token=${token}`
             }
         });
         const data = await res.json();

@@ -6,7 +6,7 @@ export const fetchAccountOnServer = async (token: any, accountId: any) => {
             method: "GET",
             headers: {
                 "Content-Type" : "application/json",
-                "Cookie" : `token=${token}`
+                Cookie : `token=${token}`
             }
         });
         const data = await res.json();
