@@ -11,8 +11,6 @@ export const loginUser = async (name: string, email: string, password: string) =
         });
         const data = await res.json();
         if (res.ok) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("loggedIn", data.loggedIn);
             return { success: true, message: "Logged In Successfully!" };
             
         }
