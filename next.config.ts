@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "portfolio1-1-el53.onrender.com",
+        hostname: "portfolio1-d71x.onrender.com",
         port: "3001",
         pathname: "/**", // Allows loading images from your backend
       },
@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*", // Proxy API requests
-        destination: "https://portfolio1-1-el53.onrender.com/api/:path*", // Your backend URL
+        destination: "https://portfolio1-d71x.onrender.com/api/:path*", // Your backend URL
       },
     ];
   },
