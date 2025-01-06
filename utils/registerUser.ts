@@ -1,7 +1,7 @@
 
 export const registerUser = async (name: string, email: string, password: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+        const res = await fetch(`/api/register`, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

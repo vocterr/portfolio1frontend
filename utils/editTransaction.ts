@@ -2,7 +2,7 @@ import { Account, Transaction } from "@/types"
 
 export const editTransaction = async (transaction: Transaction, transactionId: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transaction/${transactionId}`, {
+        const res = await fetch(`/api/transaction/${transactionId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type" : "application/json"

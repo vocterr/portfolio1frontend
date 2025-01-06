@@ -4,7 +4,7 @@ import { FormEvent } from "react";
 
 export const editGoal = async (goal: Goal, goalId: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/goal/${goalId}`, {
+        const res = await fetch(`$/api/goal/${goalId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type" : "application/json"

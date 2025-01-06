@@ -4,7 +4,7 @@ import { Goal } from "@/types";
 
 export const createBudget = async (budget: initialBudgetInterface) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/budget`, {
+        const res = await fetch(`/api/budget`, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

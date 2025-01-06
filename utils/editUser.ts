@@ -4,7 +4,7 @@ import { FormEvent } from "react";
 
 export const editUser = async (formdata: FormData) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+        const res = await fetch(`/api/user`, {
             method: "PATCH",
             credentials: "include",
             body: formdata

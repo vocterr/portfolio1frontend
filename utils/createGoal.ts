@@ -3,7 +3,7 @@ import { Goal } from "@/types";
 
 export const createGoal = async (goal: initialGoalInterface) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/goal`, {
+        const res = await fetch(`/api/goal`, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

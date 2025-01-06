@@ -2,7 +2,7 @@
 
 export const createTransaction = async (transaction: any) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transaction`, {
+        const res = await fetch(`/api/transaction`, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

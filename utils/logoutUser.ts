@@ -3,7 +3,7 @@
 
 export const logoutUser = async () => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
+        const res = await fetch(`/api/logout`, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json",

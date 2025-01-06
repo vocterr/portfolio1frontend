@@ -3,7 +3,7 @@ import { initialAccountInterface } from "@/components/AccountCreate/AccountCreat
 
 export const createAccount = async (account: initialAccountInterface) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account`, {
+        const res = await fetch(`/api/account`, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

@@ -4,7 +4,7 @@ import { FormEvent } from "react";
 
 export const editAccount = async (account: Account, accountId: string) => {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/account/${accountId}`, {
+        const res = await fetch(`/api/account/${accountId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type" : "application/json"
