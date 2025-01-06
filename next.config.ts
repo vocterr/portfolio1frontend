@@ -7,25 +7,25 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "portfolio1-d71x.onrender.com",
         port: "3001",
-        pathname: "/**", // Allows loading images from your backend
+        pathname: "/**",
       },
     ],
   },
   async rewrites() {
     return [
       {
-        source: "/api/:path*", // Proxy API requests
-        destination: "https://portfolio1-d71x.onrender.com/api/:path*", // Your backend URL
+        source: "/api/:path*",
+        destination: "https://portfolio1-d71x.onrender.com/api/:path*",
       },
     ];
   },
   async headers() {
     return [
       {
-        source: "/api/:path*", // Applies headers to all API requests
+        source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "https://portfolio1frontend.vercel.app" }, // Frontend origin
+          { key: "Access-Control-Allow-Origin", value: "https://portfolio1frontend.vercel.app" },
           { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,POST,PUT,DELETE" },
           { key: "Access-Control-Allow-Headers", value: "Content-Type,Authorization" },
         ],

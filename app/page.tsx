@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <main className="flex flex-col mt-16 items-center w-full min-h-screen">
-      {/* Hero Section */}
       <section className="relative w-full h-[600px] flex items-center justify-center bg-gradient-to-r fro-black to-black text-white">
 
         <Image
