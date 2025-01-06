@@ -9,6 +9,7 @@ import Link from "next/link";
 export default async function AccountsPage() {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
+    console.log("Cookies: ", cookieStore.getAll());
     const accounts: Account[] | [] = await fetchAccountsOnServer(token) ?? [];
     return (
         <div className="mt-[104px] h-full w-full flex flex-col">
